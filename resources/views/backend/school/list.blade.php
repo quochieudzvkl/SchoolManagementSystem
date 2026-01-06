@@ -35,53 +35,50 @@
                                 <thead>
                                     <tr>
                                         <th>id</th>
-                                        <th>name</th>
+                                        <th>Profile</th>
+                                        <th>School Name</th>
+                                        <th>Email</th>
                                         <th>status</th>
-                                        <th>amount</th>
-                                        <th>date</th>
+                                        <th>Address</th>
+                                        <th>Created Date</th>
                                         <th>actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr id="trow_1">
-                                        <td class="text-center">1</td>
-                                        <td><strong>John Doe</strong></td>
-                                        <td><span class="label label-success">New</span></td>
-                                        <td>$430.20</td>
-                                        <td>24/09/2014</td>
-                                        <td>
-                                            <button class="btn btn-default btn-rounded btn-sm"><span
-                                                    class="fa fa-pencil"></span></button>
-                                            <button class="btn btn-danger btn-rounded btn-sm"
-                                                onClick="delete_row('trow_1');"><span class="fa fa-times"></span></button>
-                                        </td>
-                                    </tr>
-                                    <tr id="trow_2">
-                                        <td class="text-center">2</td>
-                                        <td><strong>Dmitry Ivaniuk</strong></td>
-                                        <td><span class="label label-warning">Pending</span></td>
-                                        <td>$1,351.00</td>
-                                        <td>23/09/2014</td>
-                                        <td>
-                                            <button class="btn btn-default btn-rounded btn-sm"><span
-                                                    class="fa fa-pencil"></span></button>
-                                            <button class="btn btn-danger btn-rounded btn-sm"
-                                                onClick="delete_row('trow_2');"><span class="fa fa-times"></span></button>
-                                        </td>
-                                    </tr>
-                                    <tr id="trow_3">
-                                        <td class="text-center">3</td>
-                                        <td><strong>Nadia Ali</strong></td>
-                                        <td><span class="label label-info">In Queue</span></td>
-                                        <td>$2,621.00</td>
-                                        <td>22/09/2014</td>
-                                        <td>
-                                            <button class="btn btn-default btn-rounded btn-sm"><span
-                                                    class="fa fa-pencil"></span></button>
-                                            <button class="btn btn-danger btn-rounded btn-sm"
-                                                onClick="delete_row('trow_3');"><span class="fa fa-times"></span></button>
-                                        </td>
-                                    </tr>
+                                    @foreach ($schoolList as $sl)
+                                        <tr>
+                                            <td class="text-center">{{ $sl->id }}</td>
+                                            <td>
+                                                @if (!empty($sl->profile_pic))
+                                                    <img 
+                                                        src="{{ $sl->profile_pic }}" 
+                                                        alt="School Image" 
+                                                        width="50"
+                                                        style="object-fit: cover; border-radius: 6px;"
+                                                    >
+                                                @endif
+                                            </td>
+                                            <td><strong>{{ $sl->name }}</strong></td>
+                                            <td>{{ $sl->email }}</td>
+                                            <td>
+                                                @if ($sl->status == 1)
+                                                    <span class="label label-success">active</span>
+                                                @else
+                                                    <span class="label label-danger">inactive</span>
+                                                @endif
+                                            </td>
+
+                                            <td>{{ $sl->address }}</td>
+                                            <td>{{ date('d-m-y H:i A', strtotime($sl->created_at)) }}</td>
+                                            <td>
+                                                <button class="btn btn-default btn-rounded btn-sm"><span
+                                                        class="fa fa-pencil"></span></button>
+                                                <button class="btn btn-danger btn-rounded btn-sm"
+                                                    onClick="delete_row('trow_1');"><span
+                                                        class="fa fa-times"></span></button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

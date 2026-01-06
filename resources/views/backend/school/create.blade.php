@@ -20,76 +20,127 @@
         <div class="row">
             <div class="col-md-12">
 
-                <form class="form-horizontal" method="POST" action="{{ route('cpanel.school.store') }}" enctype="multipart/form-data">
+                <form class="form-horizontal" method="POST" action="{{ route('cpanel.school.store') }}"
+                    enctype="multipart/form-data">
                     @csrf
+
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">Create School</h3>
                         </div>
+
                         <div class="panel-body">
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-12 control-label">School Name <span
-                                        class="required">*</span></label>
-                                <div class="col-md-6 col-xs-12">
+
+                            {{-- School Name --}}
+                            <div class="form-group @error('name') has-error @enderror">
+                                <label class="col-md-3 control-label">
+                                    School Name <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6">
                                     <div class="input-group">
-                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
-                                        <input type="text" name="name" required class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="fa fa-pencil"></span>
+                                        </span>
+                                        <input type="text" name="name" class="form-control"
+                                            value="{{ old('name') }}">
                                     </div>
+                                    @error('name')
+                                        <span class="help-block">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-12 control-label">Profile Pic</label>
-                                <div class="col-md-6 col-xs-12">
-                                    <input style="padding: 5px;" type="file" name="profile_pic" class="form-control" />
+                            {{-- Profile Pic --}}
+                            <div class="form-group @error('profile_pic') has-error @enderror">
+                                <label class="col-md-3 control-label">Profile Pic</label>
+                                <div class="col-md-6">
+                                    <input type="file" name="profile_pic" class="form-control" style="padding:5px;">
+                                    @error('profile_pic')
+                                        <span class="help-block">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-12 control-label">Email <span
-                                        class="required">*</span></label>
-                                <div class="col-md-6 col-xs-12">
+                            {{-- Email --}}
+                            <div class="form-group @error('email') has-error @enderror">
+                                <label class="col-md-3 control-label">
+                                    Email <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6">
                                     <div class="input-group">
-                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
-                                        <input type="text" name="email" required class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="fa fa-envelope"></span>
+                                        </span>
+                                        <input type="email" name="email" class="form-control"
+                                            value="{{ old('email') }}">
                                     </div>
+                                    @error('email')
+                                        <span class="help-block">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-12 control-label">Password <span
-                                        class="required">*</span></label>
-                                <div class="col-md-6 col-xs-12">
+                            {{-- Password --}}
+                            <div class="form-group @error('password') has-error @enderror">
+                                <label class="col-md-3 control-label">
+                                    Password <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6">
                                     <div class="input-group">
-                                        <span class="input-group-addon"><span class="fa fa-unlock-alt"></span></span>
-                                        <input type="password" name="password" required class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="fa fa-unlock-alt"></span>
+                                        </span>
+                                        <input type="password" name="password" class="form-control">
                                     </div>
+                                    @error('password')
+                                        <span class="help-block">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-12 control-label">Address <span
-                                        class="required">*</span></label>
-                                <div class="col-md-6 col-xs-12">
-                                    <textarea class="form-control" required name="address"></textarea>
+                            {{-- Address --}}
+                            <div class="form-group @error('address') has-error @enderror">
+                                <label class="col-md-3 control-label">
+                                    Address <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6">
+                                    <textarea name="address" class="form-control" rows="3">{{ old('address') }}</textarea>
+                                    @error('address')
+                                        <span class="help-block">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-12 control-label">Status <span
-                                        class="required">*</span></label>
-                                <div class="col-md-6 col-xs-12">
-                                    <select class="form-control" name="status" required>
-                                        <option value="1">Action</option>
-                                        <option value="0">Inaction</option>
+                            {{-- Status --}}
+                            <div class="form-group @error('status') has-error @enderror">
+                                <label class="col-md-3 control-label">
+                                    Status <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6">
+                                    <select name="status" class="form-control">
+                                        <option value="">-- Select status --</option>
+                                        <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>
+                                            Active
+                                        </option>
+                                        <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>
+                                            Inactive
+                                        </option>
                                     </select>
+                                    @error('status')
+                                        <span class="help-block">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
 
                         </div>
+
                         <div class="panel-footer">
-                            <button class="btn btn-default">Clear Form</button>
-                            <button class="btn btn-primary pull-right">Submit</button>
+                            <button type="reset" class="btn btn-default">
+                                Clear Form
+                            </button>
+                            <button type="submit" class="btn btn-primary pull-right">
+                                Submit
+                            </button>
                         </div>
                     </div>
                 </form>

@@ -45,4 +45,13 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // static public function getSchool()
+    // {
+    //     return self::select('*')
+    //         ->where('is_admin' , '=' , 3)
+    //         ->where('is_delete' , '=' , 0)
+    //         ->orderBy('id' , 'desc')
+    //         ->get();
+    // }
 }
