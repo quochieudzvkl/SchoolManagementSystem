@@ -14,8 +14,8 @@
                     <img src="{{ asset('assets/images/users/avatar.jpg') }}" alt="John Doe" />
                 </div>
                 <div class="profile-data">
-                    <div class="profile-data-name">John Doe</div>
-                    <div class="profile-data-title">Web Developer/Designer</div>
+                    <div class="profile-data-name">{{ Auth::user()->name }}</div>
+                    <div class="profile-data-title">{{ Auth::user()->email }}</div>
                 </div>
                 <div class="profile-controls">
                     <a href="pages-profile.html" class="profile-control-left"><span class="fa fa-info"></span></a>
