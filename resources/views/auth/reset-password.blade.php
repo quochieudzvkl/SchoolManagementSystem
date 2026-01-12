@@ -23,30 +23,42 @@
         <div class="login-box animated fadeInDown">
             <div class="login-logo"></div>
             <div class="login-body">
-                <div class="login-title"><strong>Log In</strong> to your account</div>
-                <form action="{{ route('post.login') }}" class="form-horizontal" method="post">
+
+                <form method="POST" action="{{ route('password.update') }}" class="form-horizontal">
                     @csrf
-                    @include('_massage')
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <input type="email" name="email" class="form-control" required placeholder="E-mail" />
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            {{ $errors->first() }}
                         </div>
-                    </div>
+                    @endif
+
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    <!-- Token -->
+                    <input type="hidden" name="token" value="{{ $token }}">
+
+                    <!-- Email lấy từ link reset -->
+                    <input type="hidden" name="email" value="{{ $email }}">
+
                     <div class="form-group">
                         <div class="col-md-12">
                             <input type="password" name="password" class="form-control" required
-                                placeholder="Password" />
+                                placeholder="Mật khẩu mới" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-md-6">
-                            <a href="{{ route('password.request') }}" class="btn btn-link btn-block">Forgot your
-                                password?</a>
-                        </div>
-                        <div class="col-md-6">
-                            <button class="btn btn-info btn-block">Log In</button>
+                        <div class="col-md-12">
+                            <input type="password" name="password_confirmation" class="form-control" required
+                                placeholder="Nhập lại mật khẩu" />
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-info btn-block">Đổi mật khẩu</button>
+                    </div>
+
                 </form>
             </div>
             <div class="login-footer">
@@ -55,7 +67,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
 </body>

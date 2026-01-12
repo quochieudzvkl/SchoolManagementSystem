@@ -3,7 +3,7 @@
 
 <head>
     <!-- META SECTION -->
-    <title>Login</title>
+    <title>Forgot Your Password</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -23,31 +23,28 @@
         <div class="login-box animated fadeInDown">
             <div class="login-logo"></div>
             <div class="login-body">
-                <div class="login-title"><strong>Log In</strong> to your account</div>
-                <form action="{{ route('post.login') }}" class="form-horizontal" method="post">
+                <div class="login-title"><strong>Forgot Your Password</strong></div>
+                <form action="{{ route('password.email') }}" class="form-horizontal" method="POST">
                     @csrf
-                    @include('_massage')
+
                     <div class="form-group">
                         <div class="col-md-12">
-                            <input type="email" name="email" class="form-control" required placeholder="E-mail" />
+                            <input type="email" name="email" class="form-control" placeholder="E-mail" required />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <input type="password" name="password" class="form-control" required
-                                placeholder="Password" />
-                        </div>
-                    </div>
+
                     <div class="form-group">
                         <div class="col-md-6">
-                            <a href="{{ route('password.request') }}" class="btn btn-link btn-block">Forgot your
-                                password?</a>
+                            <a href="{{ route('login') }}" class="btn btn-link btn-block">Login</a>
                         </div>
                         <div class="col-md-6">
-                            <button class="btn btn-info btn-block">Log In</button>
+                            <button type="submit" class="btn btn-info btn-block">
+                                Send Reset Link
+                            </button>
                         </div>
                     </div>
                 </form>
+
             </div>
             <div class="login-footer">
                 <div class="pull-left">
