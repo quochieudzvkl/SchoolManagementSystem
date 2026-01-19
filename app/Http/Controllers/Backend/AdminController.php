@@ -21,7 +21,7 @@ class AdminController extends Controller
     }
     public function admin_list(Request $request)
     {
-        $query = User::whereIn('is_admin', array('1' , '2'));
+        $query = User::whereIn('is_admin', array('1', '2'));
 
         if ($request->filled('id')) {
             $query->where('id', $request->id);
@@ -42,17 +42,19 @@ class AdminController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
+        if ($request->filled('is_admin')) {
+            $query->where('is_admin', $request->is_admin);
+        }
 
         $adminList = $query
             ->orderBy('id', 'desc')
             ->paginate(20)
-            ->appends($request->query()); 
+            ->appends($request->query());
 
         $meta_title = "Admin List";
 
         return view('backend.admin.list', compact('adminList', 'meta_title'));
     }
-
 
     public function create_admin()
     {
@@ -69,6 +71,7 @@ class AdminController extends Controller
             'password'    => 'required|min:6',
             'address'     => 'required|string|max:500',
             'status'      => 'required|in:0,1',
+            'is_admin' => 'required|in:1,2',
             'profile_pic' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
@@ -94,7 +97,7 @@ class AdminController extends Controller
             $user->password      = bcrypt($request->password);
             $user->address       = $request->address;
             $user->status        = $request->status;
-            $user->is_admin      = 3;
+            $user->is_admin      = $request->is_admin;
             $user->created_by_id = Auth::id();
             $user->save();
 
@@ -128,22 +131,25 @@ class AdminController extends Controller
         }
     }
 
-    public function edit($slug)
+    public function edit_admin(User $user)
     {
-        $adminlist = User::where('slug', $slug)->firstOrFail();
+        $adminlist = $user;
         $meta_title = "Admin Edit";
-        return view('backend.school.edit', compact('adminlist' , 'meta_title'));
+        return view('backend.admin.edit', compact('adminlist', 'meta_title'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, $slug)
     {
+        $user = User::where('slug', $slug)->firstOrFail();
+
         $request->validate([
             'name'        => 'required|string|max:255',
             'slug'        => 'nullable|string|max:255|unique:users,slug,' . $user->id,
-            'email'       => 'required|email|unique:users,email,' . $user->id,
+            'email'       => 'sometimes|nullable|email|unique:users,email,' . $user->id,
             'password'    => 'nullable|min:6',
             'address'     => 'required|string|max:500',
             'status'      => 'required|in:0,1',
+            'is_admin' => 'required|in:1,2',
             'profile_pic' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
@@ -170,6 +176,7 @@ class AdminController extends Controller
             $user->email   = $request->email;
             $user->address = $request->address;
             $user->status  = $request->status;
+            $user->is_admin = $request->is_admin;
 
             if ($request->filled('password')) {
                 $user->password = bcrypt($request->password);
@@ -183,7 +190,7 @@ class AdminController extends Controller
 
                 $upload = $this->cloudinary->uploadImage(
                     $request->file('profile_pic'),
-                    'School/List',
+                    'Admin/List',
                     $publicId
                 );
 
@@ -206,23 +213,13 @@ class AdminController extends Controller
         }
     }
 
-    public function toggleStatus($id)
+    public function destroy(User $user)
     {
-        $school = User::findOrFail($id);
-
-        $school->status = $school->status == 1 ? 0 : 1;
-        $school->save();
-
-        return redirect()->back()->with('success', 'Cập nhật trạng thái thành công');
-    }
-
-    public function destroy(User $school)
-    {
-        if ($school->profile_pic && Storage::exists($school->profile_pic)) {
-            Storage::delete($school->profile_pic);
+        if ($user->profile_pic && Storage::exists($user->profile_pic)) {
+            Storage::delete($user->profile_pic);
         }
 
-        $school->delete();
+        $user->delete();
 
         return redirect()
             ->route('cpanel.admin')

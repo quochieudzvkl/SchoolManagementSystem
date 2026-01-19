@@ -18,7 +18,7 @@ class AuthController extends Controller
     public function post_login(Request $request)
     {
         // dd($request->all());
-        if(Auth::attempt(['email' => $request->email , 'password' => $request->password] , true))
+        if(Auth::attempt(['email' => $request->email , 'password' => $request->password , 'trang_thai' => 1] , true))
         {
             return redirect('cpanel/dashboard');
         }

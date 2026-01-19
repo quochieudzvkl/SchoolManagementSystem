@@ -10,7 +10,7 @@
 
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <!-- END META SECTION -->
-
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- CSS INCLUDE -->
     <link rel="stylesheet" type="text/css" id="theme" href="{{ asset('css/theme-default.css') }}" />
     <!-- EOF CSS INCLUDE -->

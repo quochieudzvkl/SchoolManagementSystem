@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Logs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -46,7 +47,7 @@ class SchoolController extends Controller
         $schoolList = $query
             ->orderBy('id', 'desc')
             ->paginate(10)
-            ->appends($request->query()); 
+            ->appends($request->query());
 
         $meta_title = "School List";
 
@@ -132,15 +133,17 @@ class SchoolController extends Controller
     {
         $schoollist = User::where('slug', $slug)->firstOrFail();
         $meta_title = "School Edit";
-        return view('backend.school.edit', compact('schoollist' , 'meta_title'));
+        return view('backend.school.edit', compact('schoollist', 'meta_title'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, $slug)
     {
+        $user = User::where('slug', $slug)->firstOrFail();
+
         $request->validate([
             'name'        => 'required|string|max:255',
             'slug'        => 'nullable|string|max:255|unique:users,slug,' . $user->id,
-            'email'       => 'required|email|unique:users,email,' . $user->id,
+            'email'       => 'sometimes|nullable|email|unique:users,email,' . $user->id,
             'password'    => 'nullable|min:6',
             'address'     => 'required|string|max:500',
             'status'      => 'required|in:0,1',
@@ -153,7 +156,7 @@ class SchoolController extends Controller
                 ? Str::slug($request->slug)
                 : Str::slug($request->name);
 
-            $slug = $baseSlug;
+            $slug  = $baseSlug;
             $count = 1;
 
             while (
@@ -164,12 +167,14 @@ class SchoolController extends Controller
                 $slug = "{$baseSlug}-{$count}";
                 $count++;
             }
-
             $user->name    = $request->name;
             $user->slug    = $slug;
-            $user->email   = $request->email;
             $user->address = $request->address;
             $user->status  = $request->status;
+
+            if ($request->filled('email')) {
+                $user->email = $request->email;
+            }
 
             if ($request->filled('password')) {
                 $user->password = bcrypt($request->password);
@@ -197,10 +202,12 @@ class SchoolController extends Controller
         } catch (\Exception $e) {
 
             Log::error('Error updating school', [
+                'user_id' => $user->id,
                 'message' => $e->getMessage(),
             ]);
 
-            return redirect()->back()
+            return redirect()
+                ->back()
                 ->withInput()
                 ->with('error', 'Có lỗi xảy ra khi cập nhật trường học.');
         }

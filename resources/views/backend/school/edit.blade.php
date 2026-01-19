@@ -20,9 +20,7 @@
         <div class="row">
             <div class="col-md-12">
 
-                <form action="{{ route('cpanel.school.update', ['slug' => $schoollist->slug]) }}" method="POST"
-                    enctype="multipart/form-data" class="form-horizontal">
-
+                <form action="{{ route('cpanel.school.update', $schoollist) }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
                     @csrf
                     @method('PUT')
 
@@ -132,7 +130,9 @@
                                             <span class="fa fa-envelope"></span>
                                         </span>
                                         <input type="email" name="email" class="form-control"
-                                            value="{{ old('email', $schoollist->email) }}">
+                                            value="{{ old('email', $schoollist->email) }}"
+                                            placeholder="Email (có thể bỏ trống nếu không đổi)">
+
                                     </div>
                                     @error('email')
                                         <span class="help-block">{{ $message }}</span>

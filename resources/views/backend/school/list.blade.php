@@ -90,9 +90,8 @@
                             <table class="table table-bordered table-striped table-actions">
                                 <thead>
                                     <tr>
-                                        <th>id</th>
-                                        <th>Profile</th>
                                         <th>School Name</th>
+                                        <th>Profile</th>
                                         <th>Email</th>
                                         <th>status</th>
                                         <th>Address</th>
@@ -103,14 +102,13 @@
                                 <tbody>
                                     @foreach ($schoolList as $sl)
                                         <tr>
-                                            <td class="text-center">{{ $sl->id }}</td>
+                                            <td><strong>{{ $sl->name }}</strong></td>
                                             <td>
                                                 @if (!empty($sl->profile_pic))
                                                     <img src="{{ $sl->profile_pic }}" alt="School Image" width="50"
                                                         style="object-fit: cover; border-radius: 6px;">
                                                 @endif
                                             </td>
-                                            <td><strong>{{ $sl->name }}</strong></td>
                                             <td>{{ $sl->email }}</td>
                                             <td>
                                                 @if (auth()->user()->is_admin === 1)

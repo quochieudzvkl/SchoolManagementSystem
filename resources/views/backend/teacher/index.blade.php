@@ -4,13 +4,13 @@
     <!-- START BREADCRUMB -->
     <ul class="breadcrumb">
         <li><a href="{{ route('cpanel.dashboard') }}">Home</a></li>
-        <li class="active"><a href="{{ route('cpanel.admin') }}">List</a></li>
+        <li class="active"><a href="{{ route('cpanel.teacher') }}">List</a></li>
     </ul>
     <!-- END BREADCRUMB -->
 
     <!-- PAGE TITLE -->
     <div class="page-title">
-        <h2><span class="fa fa-arrow-circle-o-left"></span> Admin</h2>
+        <h2><span class="fa fa-arrow-circle-o-left"></span> Teacher</h2>
     </div>
     <!-- END PAGE TITLE -->
 
@@ -24,22 +24,16 @@
                 <div class="panel panel-default">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title">Admin Search</h3>
+                        <h3 class="panel-title">Teacher Search</h3>
                     </div>
 
                     <div class="panel-body">
-                        <form action="{{ route('cpanel.admin') }}" method="GET">
+                        <form action="{{ route('cpanel.teacher') }}" method="GET">
 
                             <div class="col-md-2">
-                                <label>ID</label>
-                                <input type="text" class="form-control" name="id" value="{{ request('id') }}"
-                                    placeholder="ID">
-                            </div>
-
-                            <div class="col-md-2">
-                                <label>Admin Name</label>
+                                <label>Teacher Name</label>
                                 <input type="text" class="form-control" name="name" value="{{ request('name') }}"
-                                    placeholder="Admin NAME">
+                                    placeholder="TEACHER NAME">
                             </div>
 
                             <div class="col-md-2">
@@ -49,9 +43,12 @@
                             </div>
 
                             <div class="col-md-2">
-                                <label>Address</label>
-                                <input type="text" class="form-control" name="address" value="{{ request('address') }}"
-                                    placeholder="ADDRESS">
+                                <label>Gender</label>
+                                <select name="gender" class="form-control">
+                                    <option value="">-- Select --</option>
+                                    <option value="male" {{ request('gender') == 'male' ? 'selected' : '' }}>Male</option>
+                                    <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>Female</option>
+                                </select>
                             </div>
 
                             <div class="col-md-2">
@@ -64,22 +61,11 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2">
-                                <label>Role</label>
-                                <select name="is_admin" class="form-control">
-                                    <option value="">-- Select --</option>
-                                    <option value="1" {{ request('is_admin') === '1' ? 'selected' : '' }}>Super Admin
-                                    </option>
-                                    <option value="2" {{ request('is_admin') === '2' ? 'selected' : '' }}>Admin
-                                    </option>
-                                </select>
-                            </div>
-
                             <div style="clear: both;">
                                 <br>
                                 <div class="col-md-2">
                                     <button type="submit" class="btn btn-primary">Search</button>
-                                    <a href="{{ route('cpanel.admin') }}" class="btn btn-success">Reset</a>
+                                    <a href="{{ route('cpanel.teacher') }}" class="btn btn-success">Reset</a>
                                 </div>
                             </div>
 
@@ -91,8 +77,8 @@
                 <div class="panel panel-default">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title">Admin List</h3>
-                        <a class="btn btn-primary pull-right" href="{{ route('cpanel.admin.add') }}">Create Admin</a>
+                        <h3 class="panel-title">Teacher List</h3>
+                        <a class="btn btn-primary pull-right" href="{{ route('cpanel.teacher.add') }}">Create teacher</a>
                     </div>
 
                     <div class="panel-body panel-body-table">
@@ -101,72 +87,100 @@
                             <table class="table table-bordered table-striped table-actions">
                                 <thead>
                                     <tr>
+                                        <th>Full Name</th>
+                                        <th>Qualification</th>
                                         <th>Profile</th>
-                                        <th>Admin Name</th>
                                         <th>Email</th>
-                                        <th>status</th>
-                                        <th>role</th>
+                                        <th>Phone</th>
                                         <th>Address</th>
-                                        <th>Created Date</th>
-                                        <th>actions</th>
+                                        <th>Status</th>
+                                        <th>Role</th>
+                                        <th>Gender</th>
+                                        <th>Date of Birth</th>
+                                        <th>Date of Joining</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($adminList as $al)
+                                    @foreach ($teacherList as $tl)
                                         <tr>
                                             <td>
-                                                @if (!empty($al->profile_pic))
-                                                    <img src="{{ $al->profile_pic }}" alt="Admin Image" width="50"
+                                                <strong>{{ $tl->name }} {{ $tl->last_name }}</strong>
+                                            </td>
+                                            <td>{{ $tl->qualification }}</td>
+                                            <td>
+                                                @if (!empty($tl->profile_pic))
+                                                    <img src="{{ asset($tl->profile_pic) }}" alt="Teacher Image"
+                                                        width="50" height="50"
                                                         style="object-fit: cover; border-radius: 6px;">
+                                                @else
+                                                    <span class="text-muted">No Image</span>
                                                 @endif
                                             </td>
-                                            <td><strong>{{ $al->name }}</strong></td>
-                                            <td>{{ $al->email }}</td>
+                                            <td>{{ $tl->email }}</td>
                                             <td>
-                                                @if ($al->status)
+                                                {{ $tl->phone ?? '-' }}
+                                            </td>
+                                            <td title="{{ $tl->address }}">
+                                                {{ \Illuminate\Support\Str::limit($tl->address, 30, '...') }}
+                                            </td>
+                                            <td>
+                                                @if ($tl->status)
                                                     <span class="label label-success">Active</span>
                                                 @else
                                                     <span class="label label-danger">Inactive</span>
                                                 @endif
                                             </td>
                                             <td>
-                                                @if ($al->is_admin === 1)
-                                                    <span class="label label-primary">Super Admin</span>
-                                                @else
-                                                    <span class="label label-warning">Admin</span>
+                                                @if ($tl->is_admin == 5)
+                                                    <span class="label label-info">Teacher</span>
                                                 @endif
                                             </td>
-                                            <td>{{ $al->address }}</td>
-                                            <td>{{ $al->created_at->format('d-m-Y H:i') }}</td>
                                             <td>
-                                                {{-- {{ dd($al->slug) }} --}}
-                                                <a href="{{ route('cpanel.admin.edit', $al->slug) }}"
-                                                    class="btn btn-default btn-rounded btn-sm">
+                                                @if ($tl->gender === 'male')
+                                                    <span class="label label-primary">Male</span>
+                                                @elseif ($tl->gender === 'female')
+                                                    <span class="label label-danger">Female</span>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{ $tl->date_of_birth?->format('d-m-Y') ?? '-' }}
+                                            </td>
+                                            <td>
+                                                {{ $tl->date_of_joining?->format('d-m-Y') ?? '-' }}
+                                            </td>
+
+                                            {{-- Actions --}}
+                                            <td>
+                                                <a href="{{ route('cpanel.teacher.edit', $tl->slug) }}"
+                                                    class="btn btn-default btn-rounded btn-sm" title="Edit">
                                                     <span class="fa fa-pencil"></span>
                                                 </a>
-                                                <form action="{{ route('cpanel.admin.delete', $al->slug) }}" method="POST"
-                                                    style="display:inline-block"
-                                                    onsubmit="return confirm('Are you sure you want to delete this Admin?');">
 
+                                                <form action="{{ route('cpanel.teacher.delete', $tl->slug) }}"
+                                                    method="POST" style="display:inline-block"
+                                                    onsubmit="return confirm('Are you sure you want to delete this teacher?');">
                                                     @csrf
                                                     @method('DELETE')
 
-                                                    <button class="btn btn-danger btn-rounded btn-sm">
+                                                    <button class="btn btn-danger btn-rounded btn-sm" title="Delete">
                                                         <span class="fa fa-times"></span>
                                                     </button>
                                                 </form>
-
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
+
                             </table>
 
                         </div>
                     </div>
                 </div>
                 <div class="pull-right">
-                    {{ $adminList->links() }}
+                    {{ $teacherList->links() }}
                 </div>
             </div>
         </div>
