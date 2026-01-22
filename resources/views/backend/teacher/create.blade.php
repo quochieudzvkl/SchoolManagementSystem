@@ -30,6 +30,25 @@
                         </div>
 
                         <div class="panel-body">
+                            
+                            @if(Auth::user()->is_admin == 1 || Auth::user()->is_admin == 2)
+                                <div class="form-group @error('school_id') has-error @enderror">
+                                    <label class="col-md-3 control-label">
+                                        School Name <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6">
+                                        <select name="school_id" class="form-control">
+                                            <option value="">-- Select --</option>
+                                            @foreach ($teachers as $tl)
+                                                <option value="{{ $tl->id }}">{{ $tl->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('school_id')
+                                            <span class="help-block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            @endif
 
                             {{-- First Name --}}
                             <div class="form-group @error('name') has-error @enderror">

@@ -88,6 +88,9 @@
                                 <thead>
                                     <tr>
                                         <th>Full Name</th>
+                                        @if(Auth::user()->is_admin == 1 || Auth::user()->is_admin == 2)
+                                            <th>School Name</th>
+                                        @endif
                                         <th>Qualification</th>
                                         <th>Profile</th>
                                         <th>Email</th>
@@ -107,6 +110,13 @@
                                             <td>
                                                 <strong>{{ $tl->name }} {{ $tl->last_name }}</strong>
                                             </td>
+                                            @if(Auth::user()->is_admin == 1 || Auth::user()->is_admin == 2)
+                                                <td>
+                                                    @if(!empty($tl->getCreatedBy))
+                                                        {{ $tl->getCreatedBy->name }}
+                                                    @endif
+                                                </td>
+                                            @endif
                                             <td>{{ $tl->qualification }}</td>
                                             <td>
                                                 @if (!empty($tl->profile_pic))
@@ -125,10 +135,20 @@
                                                 {{ \Illuminate\Support\Str::limit($tl->address, 30, '...') }}
                                             </td>
                                             <td>
-                                                @if ($tl->status)
-                                                    <span class="label label-success">Active</span>
+                                                @if (auth()->user()->is_admin === 1 || auth()->user()->is_admin === 2 )
+                                                    <a href="{{ route('cpanel.school.toggleStatus', $tl->id) }}">
+                                                        @if ($tl->status)
+                                                            <span class="label label-success">Active</span>
+                                                        @else
+                                                            <span class="label label-danger">Inactive</span>
+                                                        @endif
+                                                    </a>
                                                 @else
-                                                    <span class="label label-danger">Inactive</span>
+                                                    @if ($tl->status)
+                                                        <span class="label label-success">Active</span>
+                                                    @else
+                                                        <span class="label label-danger">Inactive</span>
+                                                    @endif
                                                 @endif
                                             </td>
                                             <td>

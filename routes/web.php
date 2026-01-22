@@ -64,5 +64,6 @@ Route::group(['middleware' => 'school'], function(){
     Route::post('/cpanel/teacher/store' , [TeacherController::class , 'store'])->name('cpanel.teacher.store');
     Route::get('cpanel/teacher/{teacher:slug}/edit' , [TeacherController::class , 'edit'])->name('cpanel.teacher.edit');
     Route::put('/cpanel/teacher/{teacher:slug}' , [TeacherController::class , 'update'])->name('cpanel.teacher.update');
+    Route::get('/cpanel/teacher/{id}/toggle-status', [TeacherController::class, 'toggleStatus'])->name('cpanel.teacher.toggleStatus');
     Route::delete('/cpanel/teacher/{teacher:slug}' , [TeacherController::class , 'destroy'])->name('cpanel.teacher.delete');
 });

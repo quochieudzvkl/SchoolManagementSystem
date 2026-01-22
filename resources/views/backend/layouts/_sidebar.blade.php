@@ -190,13 +190,13 @@
             </li>
         @endif
 
-        @if (Auth::user()->is_admin == 3)
+        @if (Auth::user()->is_admin == 1 || Auth::user()->is_admin == 2 ||  Auth::user()->is_admin == 3)
             <li class="{{ Request::segment(2) == 'teacher' ? 'active' : '' }}">    
                 <a href="{{ route('cpanel.teacher') }}"><span class="fa fa-user"></span> <span class="xn-text">Teacher</span></a>
             </li>
         @endif
 
-        <li class="xn-openable">
+        <li class="xn-openable"> 
             <a href="#"><span class="fa fa-file-text-o"></span> <span class="xn-text">Layouts</span></a>
             <ul>
                 <li><a href="layout-boxed.html">List</a></li>

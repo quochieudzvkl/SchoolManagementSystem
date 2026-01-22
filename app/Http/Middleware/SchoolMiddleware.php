@@ -18,7 +18,7 @@ class SchoolMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            if (Auth::user()->is_admin === 3) {
+            if (Auth::user()->is_admin == 1 || Auth::user()->is_admin == 2 || Auth::user()->is_admin === 3) {
                 return $next($request);
             } else {
                 Auth::logout();

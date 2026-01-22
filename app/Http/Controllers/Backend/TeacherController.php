@@ -50,9 +50,13 @@ class TeacherController extends Controller
         return view('backend.teacher.index', compact('meta_title', 'teacherList'));
     }
     public function create_teacher()
-    {
-        $data['meta_title'] = "Teacher Create";
-        return view('backend.teacher.create', $data);
+    {   
+        $teachers = User::where('is_admin' , 3)
+                        ->where('status' , 1)
+                        ->where('trang_thai' , 1)
+                        ->get();
+        $meta_title = "Teacher Create";
+        return view('backend.teacher.create', compact('meta_title' , 'teachers'));
     }
 
     public function store(Request $request)
@@ -109,7 +113,16 @@ class TeacherController extends Controller
             $user->password           = bcrypt($request->password);
             $user->status             = $request->status;
             $user->is_admin           = 5;
-            $user->created_by_id      = Auth::id();
+
+            if(Auth::user()->is_admin == 1 || Auth::user()->is_admin == 2)
+                {
+                    $user->created_by_id = $request->school_id;
+                }
+            else
+                {
+                    $user->created_by_id = Auth::id();
+                }
+
             $user->save();
 
             // Upload ảnh
