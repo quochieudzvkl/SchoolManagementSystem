@@ -65,7 +65,7 @@
                                             placeholder="tu-dong-theo-school-name">
                                     </div>
                                     <small class="text-muted">
-                                        URL: <code>/school/{{ old('slug', $schoollist->slug) }}</code>
+                                        Slug dùng cho URL, có thể chỉnh sửa
                                     </small>
 
                                     @error('slug')

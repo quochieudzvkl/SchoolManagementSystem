@@ -159,12 +159,25 @@ class TeacherController extends Controller
     public function edit($slug)
     {
         $teacherlist = User::where('slug', $slug)->firstOrFail();
+
+        $schools = User::where('is_admin', 3)
+            ->where('status', 1)
+            ->where('trang_thai', 1)
+            ->get();
+
         $meta_title = "Teacher Edit";
-        return view('backend.teacher.edit', compact('teacherlist', 'meta_title'));
+
+        return view('backend.teacher.edit', compact('teacherlist', 'meta_title', 'schools'));
     }
 
     public function update(Request $request, User $teacher)
     {
+        if(Auth::user()->is_admin == 1 || Auth::user()->is_admin == 2) {
+            $request->validate([
+                'school_id' => 'required|exists:users,id',
+            ]);
+        }
+
         $request->validate([
             'name'               => 'required|string|max:255',
             'last_name'          => 'required|string|max:255',
@@ -220,6 +233,10 @@ class TeacherController extends Controller
             $teacher->work_experience    = $request->work_experience;
             $teacher->note               = $request->note;
             $teacher->status             = $request->status;
+
+            if(Auth::user()->is_admin == 1 || Auth::user()->is_admin == 2) {
+                    $teacher->created_by_id = $request->school_id;
+                }
 
             if ($request->filled('password')) {
                 $teacher->password = bcrypt($request->password);

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\SchoolAdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -59,6 +60,16 @@ Route::group(['middleware' => 'admin'], function(){
 });
 
 Route::group(['middleware' => 'school'], function(){
+
+    Route::get('/cpanel/school_admin' , [SchoolAdminController::class , 'admin_school_list'])->name('cpanel.school.admin');
+    Route::get('/cpanel/school_admin/add' , [SchoolAdminController::class , 'school_admin_create'])->name('cpanel.school.admin.add');
+    Route::post('/cpanel/school_admin/store' , [SchoolAdminController::class , 'school_admin_store'])->name('cpanel.school.admin.store');
+    Route::get('/cpanel/school_admin/{user:slug}/edit' , [SchoolAdminController::class , 'school_admin_edit'])->name('cpanel.school.admin.edit');
+    Route::put('/cpanel/school_admin/{user:slug}' , [SchoolAdminController::class , 'school_admin_update'])->name('cpanel.school.admin.update');
+    Route::get('/cpanel/school_admin/{id}/toggle-status', [SchoolAdminController::class, 'toggleStatus'])->name('cpanel.school.admin.toggleStatus');
+    Route::delete('cpanel/school_admin/{user:slug}' , [SchoolAdminController::class , 'school_admin_delete'])->name('cpanel.school.admin.delete');
+
+    // Teacher
     Route::get('/cpanel/teacher', [TeacherController::class , 'teacher_list'])->name('cpanel.teacher');
     Route::get('/cpanel/teacher/add' , [TeacherController::class , 'create_teacher'])->name('cpanel.teacher.add');
     Route::post('/cpanel/teacher/store' , [TeacherController::class , 'store'])->name('cpanel.teacher.store');
@@ -66,4 +77,5 @@ Route::group(['middleware' => 'school'], function(){
     Route::put('/cpanel/teacher/{teacher:slug}' , [TeacherController::class , 'update'])->name('cpanel.teacher.update');
     Route::get('/cpanel/teacher/{id}/toggle-status', [TeacherController::class, 'toggleStatus'])->name('cpanel.teacher.toggleStatus');
     Route::delete('/cpanel/teacher/{teacher:slug}' , [TeacherController::class , 'destroy'])->name('cpanel.teacher.delete');
+
 });

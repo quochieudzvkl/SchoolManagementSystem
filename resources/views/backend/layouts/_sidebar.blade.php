@@ -154,14 +154,26 @@
                 </div>
 
                 <div class="profile-data">
-                    <div class="profile-data-name">{{ Auth::user()->name }}</div>
+                    @if(!empty(Auth::user()->last_name))
+                        <div class="profile-data-name">
+                            {{ Auth::user()->name }} {{ Auth::user()->last_name }}
+                        </div>
+                    @else
+                        <div class="profile-data-name">
+                            {{ Auth::user()->name }}
+                        </div>
+                    @endif
+
                     <div class="profile-data-title">{{ Auth::user()->email }}</div>
+
                     @if(Auth::user()->is_admin == 1)
                         <div class="profile-data-role">Super Admin</div>
                     @elseif(Auth::user()->is_admin == 2)
                         <div class="profile-data-role">Admin</div>
                     @elseif(Auth::user()->is_admin == 3)
                         <div class="profile-data-role">School</div>
+                    @elseif(Auth::user()->is_admin == 5)
+                        <div class="profile-data-role">Teacher</div>
                     @else
                         <div class="profile-data-role">User</div>
                     @endif
@@ -186,11 +198,16 @@
             </li>
 
             <li class="{{ Request::segment(2) == 'school' ? 'active' : '' }}">    
-                <a href="{{ route('cpanel.school') }}"><span class="fa fa-university"></span> <span class="xn-text">School</span></a>
+                <a href="{{ route('cpanel.school') }}"><span class="fa fa-school"></span> <span class="xn-text">School</span></a>
             </li>
         @endif
 
         @if (Auth::user()->is_admin == 1 || Auth::user()->is_admin == 2 ||  Auth::user()->is_admin == 3)
+
+            <li class="{{ Request::segment(2) == 'school admin' ? 'active' : '' }}">    
+                <a href="{{ route('cpanel.school.admin') }}"><span class="fa fa-user"></span> <span class="xn-text">School Admin</span></a>
+            </li>
+            
             <li class="{{ Request::segment(2) == 'teacher' ? 'active' : '' }}">    
                 <a href="{{ route('cpanel.teacher') }}"><span class="fa fa-user"></span> <span class="xn-text">Teacher</span></a>
             </li>

@@ -10,7 +10,7 @@
 
     <!-- PAGE TITLE -->
     <div class="page-title">
-        <h2><span class="fa fa-arrow-circle-o-left"></span> Edit Admin</h2>
+        <h2><span class="fa fa-arrow-circle-o-left"></span> Edit Admin School</h2>
     </div>
     <!-- END PAGE TITLE -->
 
@@ -20,21 +20,44 @@
         <div class="row">
             <div class="col-md-12">
 
-                <form action="{{ route('cpanel.admin.update' , $adminlist->slug) }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
+                <form action="{{ route('cpanel.school.admin.update', $schooladmin) }}" method="POST"
+                    enctype="multipart/form-data" class="form-horizontal">
                     @csrf
                     @method('PUT')
 
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Edit Admin</h3>
+                            <h3 class="panel-title">Edit Admin School</h3>
                         </div>
 
                         <div class="panel-body">
 
+                            @if (Auth::user()->is_admin == 1 || Auth::user()->is_admin == 2)
+                                <div class="form-group @error('school_id') has-error @enderror">
+                                    <label class="col-md-3 control-label">
+                                        School Name <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6">
+                                        <select name="school_id" class="form-control">
+                                            <option value="">-- Select --</option>
+                                            @foreach ($schools as $tl)
+                                                <option value="{{ $tl->id }}"
+                                                    {{ old('school_id', $schooladmin->created_by_id) == $tl->id ? 'selected' : '' }}>
+                                                    {{ $tl->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('school_id')
+                                            <span class="help-block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            @endif
+
                             {{-- School Name --}}
                             <div class="form-group @error('name') has-error @enderror">
                                 <label class="col-md-3 control-label">
-                                    Admin Name <span class="required">*</span>
+                                    School Name <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6">
                                     <div class="input-group">
@@ -42,7 +65,7 @@
                                             <span class="fa fa-pencil"></span>
                                         </span>
                                         <input type="text" name="name" class="form-control"
-                                            value="{{ old('name', $adminlist->name) }}">
+                                            value="{{ old('name', $schooladmin->name) }}">
                                     </div>
                                     @error('name')
                                         <span class="help-block">{{ $message }}</span>
@@ -61,7 +84,7 @@
                                             <span class="fa fa-link"></span>
                                         </span>
                                         <input type="text" name="slug" id="slug" class="form-control"
-                                            value="{{ old('slug', $adminlist->slug) }}"
+                                            value="{{ old('slug', $schooladmin->slug) }}"
                                             placeholder="tu-dong-theo-school-name">
                                     </div>
                                     <small class="text-muted">
@@ -73,7 +96,6 @@
                                     @enderror
                                 </div>
                             </div>
-
 
                             {{-- Profile Pic --}}
                             <div class="form-group @error('profile_pic') has-error @enderror">
@@ -87,8 +109,8 @@
                                         <div class="col-xs-6 text-center">
                                             <p><strong>Current Image</strong></p>
 
-                                            @if ($adminlist->profile_pic)
-                                                <img src="{{ $adminlist->profile_pic }}" id="current-image"
+                                            @if ($schooladmin->profile_pic)
+                                                <img src="{{ $schooladmin->profile_pic }}" id="current-image"
                                                     class="img-thumbnail" style="width:120px; height:auto;">
                                             @else
                                                 <p class="text-muted">No image</p>
@@ -118,7 +140,6 @@
                                 </div>
                             </div>
 
-
                             {{-- Email --}}
                             <div class="form-group @error('email') has-error @enderror">
                                 <label class="col-md-3 control-label">
@@ -130,9 +151,8 @@
                                             <span class="fa fa-envelope"></span>
                                         </span>
                                         <input type="email" name="email" class="form-control"
-                                            value="{{ old('email', $adminlist->email) }}"
+                                            value="{{ old('email', $schooladmin->email) }}"
                                             placeholder="Email (có thể bỏ trống nếu không đổi)">
-
                                     </div>
                                     @error('email')
                                         <span class="help-block">{{ $message }}</span>
@@ -140,7 +160,7 @@
                                 </div>
                             </div>
 
-                            {{-- Password (KHÔNG bắt buộc khi edit) --}}
+                            {{-- Password --}}
                             <div class="form-group @error('password') has-error @enderror">
                                 <label class="col-md-3 control-label">
                                     Password
@@ -165,7 +185,7 @@
                                     Address <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6">
-                                    <textarea name="address" class="form-control" rows="3">{{ old('address', $adminlist->address) }}</textarea>
+                                    <textarea name="address" class="form-control" rows="3">{{ old('address', $schooladmin->address) }}</textarea>
                                     @error('address')
                                         <span class="help-block">{{ $message }}</span>
                                     @enderror
@@ -181,37 +201,15 @@
                                     <select name="status" class="form-control">
                                         <option value="">-- Select status --</option>
                                         <option value="1"
-                                            {{ old('status', $adminlist->status) == '1' ? 'selected' : '' }}>
+                                            {{ old('status', $schooladmin->status) == '1' ? 'selected' : '' }}>
                                             Active
                                         </option>
                                         <option value="0"
-                                            {{ old('status', $adminlist->status) == '0' ? 'selected' : '' }}>
+                                            {{ old('status', $schooladmin->status) == '0' ? 'selected' : '' }}>
                                             Inactive
                                         </option>
                                     </select>
                                     @error('status')
-                                        <span class="help-block">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="form-group @error('is_admin') has-error @enderror">
-                                <label class="col-md-3 control-label">
-                                    Role <span class="required">*</span>
-                                </label>
-                                <div class="col-md-6">
-                                    <select name="is_admin" class="form-control">
-                                        <option value="">-- Select status --</option>
-                                        <option value="1"
-                                            {{ old('is_admin', $adminlist->is_admin) == '1' ? 'selected' : '' }}>
-                                            Super Admin
-                                        </option>
-                                        <option value="2"
-                                            {{ old('is_admin', $adminlist->is_admin ) == '2' ? 'selected' : '' }}>
-                                            Admin
-                                        </option>
-                                    </select>
-                                    @error('is_admin')
                                         <span class="help-block">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -229,7 +227,6 @@
                         </div>
                     </div>
                 </form>
-
 
             </div>
         </div>
